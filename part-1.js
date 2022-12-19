@@ -1,33 +1,29 @@
 var rLS = require('readline-sync');
 
-var start = rLS.keyIn('Press any key to start the game! ');
+// var start = rLS.keyIn('Press any key to start the game! ');
 
-const ship = 1;
-let size = 3;
-let board = "";
-
-for (let y = 0; y < size; y++) {
-  for (let x = 0; x < size; x++) {
-    if (x + y) { 
-      board += "-";
-    } else {
-      board += "-";
-    }
-  }
-  board += "\n";
-  
-}
-console.log(board);
+const ship = 'o';
 
 
-
-var location = rLS.question('Enter location to strike? ');
-
-if (location = shipPlacement) {
-  console.log('You suck my Battleship!');
-  let playAgain = rLS.keyInYN('Would you like to play again?');
-  } else {
-    console.log('You missed try again.');
-    var location = rLS.question('Enter location to strike? ');
+const board = {
+  a: ['x', 'x', 'x'],
+  b: ['x', 'x', 'x'],
+  c: ['x', 'x', 'x'],
 };
 
+const cell = Object.entries(board);
+
+const [row1, row2, row3 ] = cell;
+
+const [r1, col1] = row1;
+const [r2, col2] = row2;
+const [r3, col3] = row3;
+
+const randomRows = r1[Math.floor(Math.random() * r1.length)];
+
+
+
+console.log(randomRows);
+// console.log(r1, col1, r2, col2, r3, col3);
+
+// console.table(board);
