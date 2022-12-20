@@ -10,7 +10,6 @@ const board = {
 
 const cell = Object.entries(board);
 
-
 function sample(arr) {
   let rowPick = arr[Math.floor(Math.random() * arr.length)];
   let colPick = rowPick[0] + rowPick[1][Math.floor(Math.random() * rowPick[1].length)];
@@ -25,9 +24,5 @@ function sample2(arr) {
 
 let ship1 = sample(cell);
 let ship2 = sample2(cell);
-
-if (ship1 === ship2 || ship1 !== ship2){
-  sample(), sample2();
-}
 
 console.log(ship1, ship2);
