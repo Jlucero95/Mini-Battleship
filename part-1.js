@@ -2,28 +2,32 @@ var rLS = require('readline-sync');
 
 // var start = rLS.keyIn('Press any key to start the game! ');
 
-const ship = 'o';
-
-
 const board = {
-  a: ['x', 'x', 'x'],
-  b: ['x', 'x', 'x'],
-  c: ['x', 'x', 'x'],
+  a: ['1', '2', '3'],
+  b: ['4', '5', '6'],
+  c: ['7', '8', '9'],
 };
 
 const cell = Object.entries(board);
 
-const [row1, row2, row3 ] = cell;
 
-const [r1, col1] = row1;
-const [r2, col2] = row2;
-const [r3, col3] = row3;
+function sample(arr) {
+  let rowPick = arr[Math.floor(Math.random() * arr.length)];
+  let colPick = rowPick[0] + rowPick[1][Math.floor(Math.random() * rowPick[1].length)];
+  return colPick;
+}
 
-const randomRows = r1[Math.floor(Math.random() * r1.length)];
+function sample2(arr) {
+  let rowPick2 = arr[Math.floor(Math.random() * arr.length)];
+  let colPick2 = rowPick2[0] + rowPick2[1][Math.floor(Math.random() * rowPick2[1].length)];
+  return colPick2;
+}
 
+let ship1 = sample(cell);
+let ship2 = sample2(cell);
 
+if (ship1 === ship2 || ship1 !== ship2){
+  sample(), sample2();
+}
 
-console.log(randomRows);
-// console.log(r1, col1, r2, col2, r3, col3);
-
-// console.table(board);
+console.log(ship1, ship2);
