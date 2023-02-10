@@ -1,28 +1,73 @@
-const rLS = require("readline-sync");
-// var start = rLS.keyIn("Press any key to start the game! ");
-const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-const topBorder = "+-";
-let sideBorder = "| ";
-let ship1 = "|x";
-let ship2 = "|x";
-function createBoard(size) {
-	const xTopAndBottom = topBorder.repeat(size);
-	function createNums(column) {
-		const x = nums.slice(0, column);
-		let xNum = "";
-		xNum += `${x}\n ${xTopAndBottom}+`;
-		return xNum;
+const rls = require("readline-sync");
+// let startGame = rls.keyIn("Press any key to start game: ");
+let nums = [1, 2, 3];
+let letters = ["a", "b", "c"];
+let randomLetter = letters
+	.sort(function () {
+		return 0.5 - Math.random();
+	})
+	.slice(0, 2);
+let randomNum = nums
+	.sort(function () {
+		return 0.5 - Math.random();
+	})
+	.slice(0, 2);
+let ship1 = randomLetter[0] + randomNum[0];
+let ship2 = randomLetter[1] + randomNum[1];
+let checkStrike = [];
+let locationsUsed = [];
+function strikeCall() {
+	let strike = rls.question("Please enter a location to strike: ");
+	const [letter, number] = strike;
+	if (letter === undefined) {
+		console.log("No location given. Please try again!!");
+		strikeCall();
 	}
-	const sides = sideBorder.repeat(size + 1);
-	function createLetters(letterLength) {
-		const y = letters.slice(0, letterLength);
-		let yLetter = "";
-		for (let i = 0; i < y.length; i++) {
-			yLetter += `${y[i] + sides}\n ${xTopAndBottom}+\n`;
+	for (let i = 0; i < letters.length; i++) {
+		if (letters[i] == letter.toLowerCase()) {
+			checkStrike.push(letter);
 		}
-		return yLetter;
 	}
-	return `  ${createNums(size)}\n${createLetters(size)}`;
+	for (let i = 0; i < nums.length; i++) {
+		if (nums[i] == number) {
+			checkStrike.push(number);
+		}
+	}
+	let combineStrike = checkStrike.join("");
+	locationsUsed.push(combineStrike);
 }
-console.log(createBoard(3));
+strikeCall();
+let loggedStrikes = [];
+let loggedHits = [];
+function findHits() {
+	for (let i = 0; i < locationsUsed.length; i++) {
+		if (ship1 == locationsUsed[i]) {
+			loggedHits.push(locationsUsed[i]);
+			console.log("You sunk my BattleShip. 1 ship remaining!!");
+			strikeCall();
+		} else {
+			console.log("You missed please try again.");
+			strikeCall();
+		}
+	}
+	for (let i = 0; i < locationsUsed.length; i++) {
+		if (ship2 == locationsUsed[i]) {
+			loggedHits.push(locationsUsed[i]);
+			console.log("You sunk my BattleShip. 1 ship remaining!!");
+			strikeCall();
+		} else {
+			console.log("You missed please try again.");
+			strikeCall();
+		}
+	}
+	if (loggedHits.length === 2) {
+		console.log("You've sunk all my Battleships!!");
+		let playAgain = rls.keyInYN("Would you like to play again?");
+		if (playAgain === Y) {
+			strikeCall();
+		} else {
+			console.log("Have a good Day.");
+		}
+	}
+}
+findHits();
