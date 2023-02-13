@@ -1,73 +1,87 @@
 const rls = require("readline-sync");
-// let startGame = rls.keyIn("Press any key to start game: ");
-let nums = [1, 2, 3];
-let letters = ["a", "b", "c"];
-let randomLetter = letters
-	.sort(function () {
-		return 0.5 - Math.random();
-	})
-	.slice(0, 2);
-let randomNum = nums
-	.sort(function () {
-		return 0.5 - Math.random();
-	})
-	.slice(0, 2);
-let ship1 = randomLetter[0] + randomNum[0];
-let ship2 = randomLetter[1] + randomNum[1];
-let checkStrike = [];
-let locationsUsed = [];
-function strikeCall() {
-	let strike = rls.question("Please enter a location to strike: ");
-	const [letter, number] = strike;
-	if (letter === undefined) {
-		console.log("No location given. Please try again!!");
-		strikeCall();
+function game() {
+	let shipA;
+	let shipB;
+	let nums = ["1", "2", "3"];
+	let letters = ["a", "b", "c"];
+	function startGame() {
+		let start = rls.keyIn("Press any key to start game: ");
+		let ship1 = [];
+		let ship2 = [];
+		function shipPlacement() {
+			let randomLetter = letters
+				.sort(function () {
+					return 0.5 - Math.random();
+				})
+				.slice(0, 2);
+			let randomNum = nums
+				.sort(function () {
+					return 0.5 - Math.random();
+				})
+				.slice(0, 2);
+			ship1.push(randomLetter[0] + randomNum[0]);
+			ship2.push(randomLetter[1] + randomNum[1]);
+		}
+		shipPlacement();
+		if (ship1 === ship2) {
+			shipPlacement();
+		}
+		shipA = ship1;
+		shipB = ship2;
 	}
-	for (let i = 0; i < letters.length; i++) {
-		if (letters[i] == letter.toLowerCase()) {
-			checkStrike.push(letter);
+	startGame();
+	console.log(shipA, shipB);
+	let checkStrike = [];
+	let sunkShips = [];
+	function strikeCall() {
+		let strike = rls.question("Please enter a location to strike: ");
+		if (strike[0] === undefined) {
+			console.log("No location given. Please try again.");
+			strikeCall();
+		}
+		let [letter, number] = strike;
+
+		if (letters.includes(letter.toLowerCase()) && nums.includes(number)) {
+			checkStrike.push(letter + number);
+			for (let i = 0; i < checkStrike.length; i++) {
+				if (letter + number === checkStrike[i]) {
+					console.log(
+						"You have already tried that location. Please try again."
+					);
+					strikeCall();
+				}
+			}
+		} else {
+			console.log("Invalid location. Please try again.");
+			strikeCall();
 		}
 	}
-	for (let i = 0; i < nums.length; i++) {
-		if (nums[i] == number) {
-			checkStrike.push(number);
+	strikeCall();
+	function findHits() {
+		for (let position of checkStrike) {
+			if (shipA[0] === position || shipB[0] === position) {
+				sunkShips.push(shipA[0]);
+				sunkShips.push(shipB[0]);
+				console.log("You sunk my BattleShip! 1 ship remaining!!");
+				strikeCall();
+			} else {
+				console.log("You missed! Please try again.");
+				strikeCall();
+			}
+			if (sunkShips.length == 2) {
+				console.log("You've sunk all my Battleships!!");
+				let playAgain = rls.keyInYN("Would you like to play again?");
+				if (playAgain === true) {
+					checkStrike.length = 0;
+					sunkShips.length = 0;
+					game();
+				} else {
+					console.log("Have a good Day.");
+					process.exit();
+				}
+			}
 		}
 	}
-	let combineStrike = checkStrike.join("");
-	locationsUsed.push(combineStrike);
+	findHits();
 }
-strikeCall();
-let loggedStrikes = [];
-let loggedHits = [];
-function findHits() {
-	for (let i = 0; i < locationsUsed.length; i++) {
-		if (ship1 == locationsUsed[i]) {
-			loggedHits.push(locationsUsed[i]);
-			console.log("You sunk my BattleShip. 1 ship remaining!!");
-			strikeCall();
-		} else {
-			console.log("You missed please try again.");
-			strikeCall();
-		}
-	}
-	for (let i = 0; i < locationsUsed.length; i++) {
-		if (ship2 == locationsUsed[i]) {
-			loggedHits.push(locationsUsed[i]);
-			console.log("You sunk my BattleShip. 1 ship remaining!!");
-			strikeCall();
-		} else {
-			console.log("You missed please try again.");
-			strikeCall();
-		}
-	}
-	if (loggedHits.length === 2) {
-		console.log("You've sunk all my Battleships!!");
-		let playAgain = rls.keyInYN("Would you like to play again?");
-		if (playAgain === Y) {
-			strikeCall();
-		} else {
-			console.log("Have a good Day.");
-		}
-	}
-}
-findHits();
+game();
