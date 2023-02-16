@@ -33,16 +33,14 @@ function game() {
 	console.log(shipA, shipB);
 	let checkStrike = [];
 	let sunkShips = [];
-	let invalidPosition = [];
 	function strikeCall() {
 		let strike = rls.question("Please enter a location to strike: ");
 		if (strike[0] === undefined) {
-			invalidPosition.push(strike);
 			console.log("No location given. Please try again.");
-			strikeCall();
+			return strikeCall();
 		}
 		let [letter, number] = strike;
-
+		console.log(strike);
 		if (letters.includes(letter.toLowerCase()) && nums.includes(number)) {
 			for (let i = 0; i < checkStrike.length; i++) {
 				if (letter + number === checkStrike[i]) {
