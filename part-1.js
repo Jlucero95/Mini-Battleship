@@ -30,30 +30,32 @@ function game() {
 		shipB = ship2;
 	}
 	startGame();
-	console.log(shipA, shipB);
+
 	let checkStrike = [];
 	let sunkShips = [];
+	console.log(shipA, shipB);
 	function strikeCall() {
-		let strike = rls.question("Please enter a location to strike: ");
-		if (strike[0] === undefined) {
-			console.log("No location given. Please try again.");
-			return strikeCall();
-		}
-		let [letter, number] = strike;
-		console.log(strike);
-		if (letters.includes(letter.toLowerCase()) && nums.includes(number)) {
-			for (let i = 0; i < checkStrike.length; i++) {
-				if (letter + number === checkStrike[i]) {
-					console.log(
-						"You have already tried that location. Please try again."
-					);
-					strikeCall();
+		let strike;
+		while (true) {
+			strike = rls.question("Please enter a location to strike: ");
+			if (strike[0] === undefined) {
+				console.log("No location given. Please try again.");
+				return strikeCall();
+			} else {
+				let [letter, number] = strike;
+				if (letters.includes(letter.toLowerCase()) && nums.includes(number)) {
+					if (checkStrike.includes(letter + number)) {
+						console.log(
+							"You have already tried that location. Please try again."
+						);
+					} else {
+						checkStrike.push(letter + number);
+						break;
+					}
+				} else {
+					console.log("Invalid location. Please try again.");
 				}
 			}
-			checkStrike.push(letter + number);
-		} else {
-			console.log("Invalid location. Please try again.");
-			strikeCall();
 		}
 	}
 	strikeCall();
@@ -64,8 +66,6 @@ function game() {
 			console.log("You've sunk all my Battleships!!");
 			let playAgain = rls.keyInYN("Would you like to play again?");
 			if (playAgain === true) {
-				checkStrike.length = 0;
-				sunkShips.length = 0;
 				game();
 			} else {
 				console.log("Have a good Day.");
