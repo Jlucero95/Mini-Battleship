@@ -7,31 +7,24 @@ const fourShip = 4;
 const fiveShip = 5;
 const ship = [];
 
-const placeHolder = [];
-const letters = "abcdefghij".toUpperCase().split("");
+const letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-function findLocation() {
-	let randomIndex = Math.floor(Math.random() * letters.length);
-	if (randomIndex > 0) {
-		placeHolder.push(letters[randomIndex - 1] + randomIndex);
-	} else findLocation();
-}
-findLocation();
-
-let converter = (str, letters) => {
-	const x = letters.indexOf(str[0]);
-	const y = +str.substring(1) - 1;
-	return [x, y];
-};
-
-let coord = converter(placeHolder[0], letters);
-
-if (direction === "hor") {
-	if (coord[1] + fourShip < letters.length) {
-		for (let i = 0; i < fourShip; i++) {
-			ship.push([coord[0], coord[1] + i]);
+function findLocation(shipSize) {
+	let randomLetter = letters[Math.floor(Math.random() * letters.length)];
+	let randomNum = nums[Math.floor(Math.random() * nums.length)];
+	function horLocation() {
+		if (direction === "hor") {
+			let numsOfCoor = [];
+			let endNum = randomNum + shipSize - 1;
+			if (endNum <= 10) {
+				for (let i = randomNum; i <= endNum; i++) {
+					numsOfCoor.push(i);
+				}
+			}
+			console.log(numsOfCoor);
 		}
 	}
+	horLocation();
 }
-
-console.log(ship);
+findLocation(fiveShip);

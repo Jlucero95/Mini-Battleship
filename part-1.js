@@ -33,7 +33,6 @@ function game() {
 
 	let checkStrike = [];
 	let sunkShips = [];
-	console.log(shipA, shipB);
 	function strikeCall() {
 		let strike;
 		while (true) {
