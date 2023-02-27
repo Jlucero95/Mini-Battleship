@@ -5,7 +5,7 @@ const twoShip = 2;
 const threeShip = 3;
 const fourShip = 4;
 const fiveShip = 5;
-const ship = [];
+const ships = [];
 function makeLetters(str) {
 	return str.split("");
 }
@@ -21,19 +21,27 @@ function grid(num, letter) {
 	}
 	return board;
 }
+
 const game = grid(10, letters);
 let randomSection = game[Math.floor(Math.random() * game.length)];
 let randomCoor =
 	randomSection[Math.floor(Math.random() * randomSection.length)];
 
-let splitCoor = randomCoor.split("");
+let splitCoor = randomCoor.match(/[a-zA-Z]+|[0-9]+/g);
 
-if (direction === "hor") {
-	if (splitCoor[1] + twoShip < letters.length) {
-		for (let i = 0; i < twoShip; i++) {
-			ship.push([splitCoor[0], splitCoor[1] + i]);
+function placeShip(ship) {
+	if (direction === "hor") {
+		if (parseInt(splitCoor[1]) + ship < letters.length + 1) {
+			for (let i = 0; i < ship; i++) {
+				ships.push(splitCoor[0], parseInt(splitCoor[1]) + i);
+			}
 		}
 	}
 }
+placeShip(twoShip);
+placeShip(threeShip);
+placeShip(threeShip);
+placeShip(fourShip);
+placeShip(fiveShip);
 
-console.log(splitCoor[1]);
+console.log(ships);
