@@ -6,25 +6,34 @@ const threeShip = 3;
 const fourShip = 4;
 const fiveShip = 5;
 const ship = [];
+function makeLetters(str) {
+	return str.split("");
+}
+const letters = makeLetters("ABCDEFGHIJ");
 
-const letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
-const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-function findLocation(shipSize) {
-	let randomLetter = letters[Math.floor(Math.random() * letters.length)];
-	let randomNum = nums[Math.floor(Math.random() * nums.length)];
-	function horLocation() {
-		if (direction === "hor") {
-			let numsOfCoor = [];
-			let endNum = randomNum + shipSize - 1;
-			if (endNum <= 10) {
-				for (let i = randomNum; i <= endNum; i++) {
-					numsOfCoor.push(i);
-				}
-			}
-			console.log(numsOfCoor);
+function grid(num, letter) {
+	let board = [];
+	for (let i = 0; i < num; i++) {
+		board.push([]);
+		for (let j = 0; j < num; j++) {
+			board[i].push(`${letters[i]}${j + 1}`);
 		}
 	}
-	horLocation();
+	return board;
 }
-findLocation(fiveShip);
+const game = grid(10, letters);
+let randomSection = game[Math.floor(Math.random() * game.length)];
+let randomCoor =
+	randomSection[Math.floor(Math.random() * randomSection.length)];
+
+let splitCoor = randomCoor.split("");
+
+if (direction === "hor") {
+	if (splitCoor[1] + twoShip < letters.length) {
+		for (let i = 0; i < twoShip; i++) {
+			ship.push([splitCoor[0], splitCoor[1] + i]);
+		}
+	}
+}
+
+console.log(splitCoor[1]);
