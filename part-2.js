@@ -22,50 +22,63 @@ function grid(num, letter) {
 }
 const game = grid(10, letters);
 
-function placeShip(ship, shipLength) {
+function findCoor(ship, shipLength) {
 	let randomSection = game[Math.floor(Math.random() * game.length)];
 	let randomCoor =
 		randomSection[Math.floor(Math.random() * randomSection.length)];
-	let splitCoor = randomCoor.match(/[a-zA-Z]+|[0-9]+/g);
+
+	console.log(randomCoor);
+	let splitCoor = randomCoor.match(/[a-jA-J]+|[0-9]+/g);
 	let direction = "hor";
 
 	let newShip = [];
 
-	if (parseInt(splitCoor[1]) + shipLength <= letters.length) {
-		for (let i = 0; i < shipLength; i++) {
-			newShip.push([splitCoor[0].concat(parseInt(splitCoor[1]) + i)]);
+	function placeShipHor() {
+		if (parseInt(splitCoor[1]) + shipLength <= letters.length) {
+			for (let i = 0; i < shipLength; i++) {
+				console.log("Look at this", parseInt(splitCoor[1]));
+				if (parseInt(splitCoor[1]) + i > 9) {
+					placeShipHor();
+				}
+				newShip.push([splitCoor[0].concat(parseInt(splitCoor[1]) + i)]);
+			}
+		} else {
+			direction = "vert";
 		}
-	} else {
-		direction = "vert";
 	}
 
-	if (
-		direction === "vert" &&
-		letters.indexOf(splitCoor[0]) + shipLength <= letters.length
-	) {
-		for (let i = 0; i < shipLength; i++) {
-			newShip.push([
-				letters[letters.indexOf(splitCoor[0]) + i].concat(splitCoor[1]),
-			]);
+	function placeShipVert() {
+		if (
+			direction === "vert"
+			// letters.indexOf(splitCoor[0]) + shipLength <= letters.length
+		) {
+			for (let i = 0; i < shipLength; i++) {
+				console.log("Look at this", letters.indexOf(splitCoor[0]));
+				if (letters.indexOf(splitCoor[0]) + i > 9) {
+					placeShipVert();
+				}
+				if (
+					letters[letters.indexOf(splitCoor[0]) + i].concat(splitCoor[1]) >
+					(letters.indexOf(splitCoor[0]) + i > 9)
+				) {
+					placeShipVert();
+				}
+				newShip.push([
+					letters[letters.indexOf(splitCoor[0]) + i].concat(splitCoor[1]),
+				]);
+			}
 		}
 	}
+	placeShipHor();
+	placeShipVert();
+
+	if (placeShipHor === undefined && placeShipVert === undefined) {
+	}
+	if (newShip.length === 0) {
+		findCoor(ship, shipLength);
+	}
+	// console.log(newShip);
 	ships.push(newShip);
 }
-
-placeShip(twoShip, 2);
-placeShip(threeShip, 3);
-placeShip(threeShip, 3);
-placeShip(fourShip, 4);
-placeShip(fiveShip, 5);
-
-for (const checkShips of ships) {
-	if (checkShips === []) {
-		placeShip(twoShip, 2);
-		placeShip(threeShip, 3);
-		placeShip(threeShip, 3);
-		placeShip(fourShip, 4);
-		placeShip(fiveShip, 5);
-	}
-}
-
+findCoor(threeShip, 3);
 console.log(ships);
