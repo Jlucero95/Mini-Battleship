@@ -10,7 +10,6 @@ function makeLetters(str) {
 	return str.split("");
 }
 const letters = makeLetters("ABCDEFGHIJ");
-
 function grid(num, letter) {
 	let board = [];
 	for (let i = 0; i < num; i++) {
@@ -21,27 +20,52 @@ function grid(num, letter) {
 	}
 	return board;
 }
-
 const game = grid(10, letters);
-let randomSection = game[Math.floor(Math.random() * game.length)];
-let randomCoor =
-	randomSection[Math.floor(Math.random() * randomSection.length)];
 
-let splitCoor = randomCoor.match(/[a-zA-Z]+|[0-9]+/g);
+function placeShip(ship, shipLength) {
+	let randomSection = game[Math.floor(Math.random() * game.length)];
+	let randomCoor =
+		randomSection[Math.floor(Math.random() * randomSection.length)];
+	let splitCoor = randomCoor.match(/[a-zA-Z]+|[0-9]+/g);
+	let direction = "hor";
 
-function placeShip(ship) {
-	if (direction === "hor") {
-		if (parseInt(splitCoor[1]) + ship < letters.length + 1) {
-			for (let i = 0; i < ship; i++) {
-				ships.push(splitCoor[0], parseInt(splitCoor[1]) + i);
-			}
+	let newShip = [];
+
+	if (parseInt(splitCoor[1]) + shipLength <= letters.length) {
+		for (let i = 0; i < shipLength; i++) {
+			newShip.push([splitCoor[0].concat(parseInt(splitCoor[1]) + i)]);
+		}
+	} else {
+		direction = "vert";
+	}
+
+	if (
+		direction === "vert" &&
+		letters.indexOf(splitCoor[0]) + shipLength <= letters.length
+	) {
+		for (let i = 0; i < shipLength; i++) {
+			newShip.push([
+				letters[letters.indexOf(splitCoor[0]) + i].concat(splitCoor[1]),
+			]);
 		}
 	}
+	ships.push(newShip);
 }
-placeShip(twoShip);
-placeShip(threeShip);
-placeShip(threeShip);
-placeShip(fourShip);
-placeShip(fiveShip);
+
+placeShip(twoShip, 2);
+placeShip(threeShip, 3);
+placeShip(threeShip, 3);
+placeShip(fourShip, 4);
+placeShip(fiveShip, 5);
+
+for (const checkShips of ships) {
+	if (checkShips === []) {
+		placeShip(twoShip, 2);
+		placeShip(threeShip, 3);
+		placeShip(threeShip, 3);
+		placeShip(fourShip, 4);
+		placeShip(fiveShip, 5);
+	}
+}
 
 console.log(ships);
