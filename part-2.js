@@ -28,6 +28,7 @@ function placeShip(ship, shipLength) {
 		randomSection[Math.floor(Math.random() * randomSection.length)];
 	let splitCoor = randomCoor.match(/[a-zA-Z]+|[0-9]+/g);
 	let direction = "hor";
+
 	let newShip = [];
 
 	if (parseInt(splitCoor[1]) + shipLength <= letters.length) {
@@ -50,7 +51,17 @@ function placeShip(ship, shipLength) {
 	}
 	ships.push(newShip);
 }
+function checkOverlap(shipCoords, usedCoords) {
+	for (let coord of shipCoords) {
+		if (usedCoords.has(coord)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function checkPlacement(arr) {
+	let usedCoords = new Set();
 	while (arr.flat().length < 17) {
 		arr.length = 0;
 		placeShip(twoShip, 2);
@@ -58,24 +69,24 @@ function checkPlacement(arr) {
 		placeShip(threeShip, 3);
 		placeShip(fourShip, 4);
 		placeShip(fiveShip, 5);
+
+		let overlaps = false;
+		for (let ship of arr) {
+			if (checkOverlap(ship, usedCoords)) {
+				overlaps = true;
+				break;
+			} else {
+				for (let coord of ship) {
+					usedCoords.add(coord);
+				}
+			}
+		}
+		if (overlaps) {
+			arr.length = 0;
+			usedCoords.clear();
+		}
 	}
 }
 checkPlacement(ships);
-
-function checkOverlap(coor, fleet) {
-	coor.forEach((item) => {
-		if (fleet.flat().includes(item)) return true;
-	});
-	return false;
-}
-
-let checkAgainst = ships.flat();
-
-function ifOverlap() {
-	if (checkOverlap(checkAgainst, ships)) {
-		checkPlacement(ships);
-	}
-}
-ifOverlap();
 
 console.log(ships);
