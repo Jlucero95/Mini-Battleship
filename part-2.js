@@ -62,4 +62,20 @@ function checkPlacement(arr) {
 }
 checkPlacement(ships);
 
+function checkOverlap(coor, fleet) {
+	coor.forEach((item) => {
+		if (fleet.flat().includes(item)) return true;
+	});
+	return false;
+}
+
+let checkAgainst = ships.flat();
+
+function ifOverlap() {
+	if (checkOverlap(checkAgainst, ships)) {
+		checkPlacement(ships);
+	}
+}
+ifOverlap();
+
 console.log(ships);
