@@ -1,5 +1,5 @@
 const rls = require("readline-sync");
-
+// let start = rls.keyIn("Press any key to start game: ");
 let direction = "hor";
 const twoShip = 2;
 const threeShip = 3;
@@ -88,5 +88,38 @@ function checkPlacement(arr) {
 	}
 }
 checkPlacement(ships);
+let checkStrike = [];
+function checkHit() {
+	const indexList = [];
+	for (let i = 0; i < letters.length; i++) {
+		indexList.push(letters.indexOf(letters[i]) + 1);
+	}
+	let strike;
+	while (true) {
+		strike = rls.question("Please enter a location to strike: ");
+		if (strike[0] === undefined) {
+			console.log("No location given. Please try again.");
+			return checkHit();
+		} else {
+			let [letter, number] = strike;
+			if (
+				letters.includes(letter.toUpperCase()) &&
+				indexList.includes(number)
+			) {
+				if (checkStrike.includes(letter + number)) {
+					console.log(
+						"You have already tried that location. Please try again."
+					);
+				} else {
+					checkStrike.push(letter + number);
+					break;
+				}
+			} else {
+				console.log("Invalid location. Please try again.");
+			}
+		}
+	}
+}
+checkHit();
 
-console.log(ships);
+// console.log(ships);
