@@ -21,6 +21,7 @@ function grid(num, letter) {
 	return board;
 }
 const game = grid(10, letters);
+console.log(letters);
 
 function placeShip(ship, shipLength) {
 	let randomSection = game[Math.floor(Math.random() * game.length)];
@@ -92,7 +93,7 @@ let checkStrike = [];
 function checkHit() {
 	const indexList = [];
 	for (let i = 0; i < letters.length; i++) {
-		indexList.push(letters.indexOf(letters[i]) + 1);
+		indexList.push((letters.indexOf(letters[i]) + 1).toString());
 	}
 	let strike;
 	while (true) {
@@ -112,6 +113,7 @@ function checkHit() {
 					);
 				} else {
 					checkStrike.push(letter + number);
+					console.log(checkStrike);
 					break;
 				}
 			} else {
