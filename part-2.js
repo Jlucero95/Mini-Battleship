@@ -88,13 +88,14 @@ function checkPlacement(arr) {
 	}
 }
 checkPlacement(ships);
-let checkStrike = [];
+let allStrikes = [];
+const indexList = [];
 function checkHit() {
-	const indexList = [];
 	for (let i = 0; i < letters.length; i++) {
 		indexList.push((letters.indexOf(letters[i]) + 1).toString());
 	}
 	let strike;
+	let strikeTen;
 	while (true) {
 		strike = rls.question("Please enter a location to strike: ");
 		if (strike[0] === undefined) {
@@ -102,16 +103,26 @@ function checkHit() {
 			return checkHit();
 		} else {
 			let [letter, number] = strike;
+			if (strike.length === 3) {
+				let [letter, number, secondNum] = strike;
+				let strikeTen = number.concat(secondNum);
+			}
 			if (
-				letters.includes(letter.toUpperCase()) &&
-				indexList.includes(number)
+				(letters.includes(letter.toUpperCase()) &&
+					indexList.includes(number)) ||
+				(letters.includes(letter.toUpperCase()) &&
+					indexList.includes(strikeTen))
 			) {
-				if (checkStrike.includes(letter + number)) {
+				if (
+					allStrikes.includes(letter + number) ||
+					allStrikes.includes(letter + strikeTen)
+				) {
 					console.log(
 						"You have already tried that location. Please try again."
 					);
 				} else {
-					checkStrike.push(letter + number);
+					allStrikes.push(letter + number) ||
+						allStrikes.push(letter + secondNum);
 					break;
 				}
 			} else {
@@ -121,5 +132,18 @@ function checkHit() {
 	}
 }
 checkHit();
-
-// console.log(ships);
+function findStrikes() {
+	for (let strikes of allStrikes) {
+		for (let i = 0; i < ships.length; i++) {
+			if (ships[i].includes(strikes)) {
+				console.log("Thats a hit");
+				checkHit();
+			} else {
+				console.log("You missed.! Please try again.");
+				checkHit();
+			}
+		}
+	}
+}
+findStrikes();
+// console.log(checkStrike);
