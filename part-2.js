@@ -88,62 +88,32 @@ function checkPlacement(arr) {
 	}
 }
 checkPlacement(ships);
-let allStrikes = [];
-const indexList = [];
-function checkHit() {
-	for (let i = 0; i < letters.length; i++) {
-		indexList.push((letters.indexOf(letters[i]) + 1).toString());
-	}
-	let strike;
-	let strikeTen;
-	while (true) {
-		strike = rls.question("Please enter a location to strike: ");
-		if (strike[0] === undefined) {
-			console.log("No location given. Please try again.");
-			return checkHit();
-		} else {
-			let [letter, number] = strike;
-			if (strike.length === 3) {
-				let [letter, number, secondNum] = strike;
-				let strikeTen = number.concat(secondNum);
-			}
-			if (
-				(letters.includes(letter.toUpperCase()) &&
-					indexList.includes(number)) ||
-				(letters.includes(letter.toUpperCase()) &&
-					indexList.includes(strikeTen))
-			) {
-				if (
-					allStrikes.includes(letter + number) ||
-					allStrikes.includes(letter + strikeTen)
-				) {
-					console.log(
-						"You have already tried that location. Please try again."
-					);
-				} else {
-					allStrikes.push(letter + number) ||
-						allStrikes.push(letter + secondNum);
-					break;
-				}
-			} else {
-				console.log("Invalid location. Please try again.");
-			}
-		}
+console.log(ships);
+
+let recordedStrike = [];
+let sunkShips = [];
+let strike;
+
+function checkStrike() {
+	let strike = rls.question("Please enter a location to strike: ");
+	strike[0].toUpperCase();
+	if (strike[0] === undefined) {
+		console.log("No location given. Please try again.");
+		checkStrike();
+		return false;
+	} else if (letters.includes(strike[0])) {
+		console.log("Invalid location. Please try again.");
+		checkStrike();
+		return false;
 	}
 }
-checkHit();
-function findStrikes() {
-	for (let strikes of allStrikes) {
-		for (let i = 0; i < ships.length; i++) {
-			if (ships[i].includes(strikes)) {
-				console.log("Thats a hit");
-				checkHit();
-			} else {
-				console.log("You missed.! Please try again.");
-				checkHit();
-			}
-		}
+checkStrike();
+
+function goodStrike() {
+	let coors = [];
+	for (let i = 0; i < ships.length; i++) {
+		coors.push(ships[i]);
 	}
+	console.log(coors.flat());
 }
-findStrikes();
-// console.log(checkStrike);
+goodStrike();
