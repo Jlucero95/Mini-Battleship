@@ -92,52 +92,56 @@ console.log(ships);
 
 let recordedStrike = [];
 let sunkShips = [];
-function checkCoor() {
-	let strike = rls.question("Please enter a location to strike: ");
-	let [letter, ...nums] = strike;
-	let num = nums.join("").toString();
-	function checkLetter(letterCoor) {
-		if (letterCoor === undefined) {
-			console.log("No location given. Please try again.");
-			checkCoor();
-		} else if (!letters.includes(letterCoor.toUpperCase())) {
-			console.log("Invalid location. Please try again.");
-			checkCoor();
-		} else {
-			return true;
-		}
-	}
-	checkLetter(letter);
-	function checkNum() {
-		if (checkLetter(letter)) {
-			if (/[1-9]/g.test(num) || num === 10) {
-				recordedStrike.push(letter.toUpperCase() + num);
-				return true;
-			} else {
+while (true) {
+	function checkCoor() {
+		let strike = rls.question("Please enter a location to strike: ");
+		let [letter, ...nums] = strike;
+		let num = nums.join("").toString();
+		function checkLetter(letterCoor) {
+			if (letterCoor === undefined) {
+				console.log("No location given. Please try again.");
+				checkCoor();
+			} else if (!letters.includes(letterCoor.toUpperCase())) {
 				console.log("Invalid location. Please try again.");
 				checkCoor();
-			}
-		}
-	}
-	checkNum();
-	console.log(recordedStrike);
-
-	if (checkNum === true) {
-		return checkCoor();
-	}
-}
-checkCoor();
-function goodStrike() {
-	for (let positions of ships) {
-		for (let guess of recordedStrike) {
-			if (positions.includes(guess)) {
-				console.log("That's a hit!");
-				checkCoor();
 			} else {
-				console.log("You missed! Please try again.");
-				checkCoor();
+				return true;
+			}
+		}
+		checkLetter(letter);
+		function checkNum() {
+			if (checkLetter(letter)) {
+				if (/[1-9]/g.test(num) || num === 10) {
+					recordedStrike.push(letter.toUpperCase() + num);
+					return true;
+				} else {
+					console.log("Invalid location. Please try again.");
+					checkCoor();
+				}
+			}
+		}
+		checkNum();
+
+		console.log(recordedStrike);
+
+		if (checkNum === true) {
+			return checkCoor();
+		}
+	}
+
+	checkCoor();
+	function goodStrike() {
+		for (let i = 0; i < ships.length; i++) {
+			for (let guess of recordedStrike) {
+				if (ships[i].includes(guess)) {
+					console.log("That's a hit!");
+					checkCoor();
+				} else {
+					console.log("You missed! Please try again.");
+					checkCoor();
+				}
 			}
 		}
 	}
+	goodStrike();
 }
-goodStrike();
