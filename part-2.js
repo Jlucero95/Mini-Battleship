@@ -92,28 +92,41 @@ console.log(ships);
 
 let recordedStrike = [];
 let sunkShips = [];
-let strike;
-
-function checkStrike() {
-	let strike = rls.question("Please enter a location to strike: ");
-	strike[0].toUpperCase();
-	if (strike[0] === undefined) {
+let strike = rls.question("Please enter a location to strike: ");
+let [letter, ...nums] = strike;
+let num = nums.join("").toString();
+function checkLetter(letterCoor) {
+	if (letterCoor === undefined) {
 		console.log("No location given. Please try again.");
-		checkStrike();
+		let strike = rls.question("Please enter a location to strike: ");
 		return false;
-	} else if (letters.includes(strike[0])) {
+	} else if (!letters.includes(letterCoor.toUpperCase())) {
 		console.log("Invalid location. Please try again.");
-		checkStrike();
+		let strike = rls.question("Please enter a location to strike: ");
 		return false;
+	} else {
+		return true;
 	}
 }
-checkStrike();
-
-function goodStrike() {
-	let coors = [];
-	for (let i = 0; i < ships.length; i++) {
-		coors.push(ships[i]);
+checkLetter(letter);
+function checkNum(numCoor) {
+	if (checkLetter(letter)) {
+		if (/[1-10]/g.test(numCoor)) {
+			return true;
+		} else {
+			console.log("Invalid location. Please try again.");
+			return false;
+		}
 	}
-	console.log(coors.flat());
 }
-goodStrike();
+checkNum(num);
+// function goodStrike() {
+// 	let coors = [];
+// 	for (let i = 0; i < ships.length; i++) {
+// 		coors.push(ships[i]);
+// 		for (let j = 0; j < ships[i].length; j++) {
+// 			coors.push(ships[i][j]);
+// 		}
+// 	}
+// 	return coors;
+// }
