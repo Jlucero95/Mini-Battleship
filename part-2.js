@@ -159,7 +159,7 @@ function game() {
 			if (hitPoint === 0) {
 				console.log("You have sunk all my ships!!!");
 				let playAgain = rls.keyInYN("Would you like to play again? ");
-				if (playAgain) {
+				if (playAgain === true) {
 					game();
 				} else {
 					console.log("Have a good day!!");
@@ -168,8 +168,6 @@ function game() {
 			}
 		}
 		checkSunkShips();
-
-		console.log(hitPoint);
 	}
 }
 game();
