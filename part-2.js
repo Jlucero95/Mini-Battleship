@@ -21,17 +21,14 @@ function game() {
 		}
 		return board;
 	}
-	const game = grid(10, letters);
-
+	const boardGame = grid(10, letters);
 	function placeShip(ship, shipLength) {
-		let randomSection = game[Math.floor(Math.random() * game.length)];
+		let randomSection = boardGame[Math.floor(Math.random() * boardGame.length)];
 		let randomCoor =
 			randomSection[Math.floor(Math.random() * randomSection.length)];
 		let splitCoor = randomCoor.match(/[a-zA-Z]+|[0-9]+/g);
 		let direction = "hor";
-
 		let newShip = [];
-
 		if (parseInt(splitCoor[1]) + shipLength <= letters.length) {
 			for (let i = 0; i < shipLength; i++) {
 				newShip.push(splitCoor[0].concat(parseInt(splitCoor[1]) + i));
@@ -39,7 +36,6 @@ function game() {
 		} else {
 			direction = "vert";
 		}
-
 		if (
 			direction === "vert" &&
 			letters.indexOf(splitCoor[0]) + shipLength <= letters.length
@@ -60,7 +56,6 @@ function game() {
 		}
 		return false;
 	}
-
 	function checkPlacement(arr) {
 		let usedCoords = new Set();
 		while (arr.flat().length < 17) {
@@ -70,7 +65,6 @@ function game() {
 			placeShip(threeShip, 3);
 			placeShip(fourShip, 4);
 			placeShip(fiveShip, 5);
-
 			let overlaps = false;
 			for (let ship of arr) {
 				if (checkOverlap(ship, usedCoords)) {
@@ -89,35 +83,33 @@ function game() {
 		}
 	}
 	checkPlacement(ships);
-	console.log(ships);
-
 	let recordedStrike = [];
 	let currentStrike;
 	let sunkShips = [];
 	let hitPoint = 17;
-	while (true) {
+	let restart = true;
+	while (restart) {
 		function checkCoor() {
 			let strike = rls.question("Please enter a location to strike: ");
 			let [letter, ...nums] = strike;
 			let num = nums.join("").toString();
-
 			function checkLetter(letterCoor) {
-				if (letterCoor === undefined) {
-					console.log("No location given. Please try again.");
-					checkCoor();
-				} else if (!letters.includes(letterCoor.toUpperCase())) {
+				if (
+					letterCoor === undefined ||
+					!letters.includes(letterCoor.toUpperCase())
+				) {
 					console.log("Invalid location. Please try again.");
+					return false;
 					checkCoor();
 				} else {
 					return true;
 				}
 			}
 			checkLetter(letter);
-
-			function checkNum(number) {
+			function checkNum(numCoor) {
 				if (checkLetter(letter)) {
-					if (/[1-9]/g.test(number) || number === 10) {
-						currentStrike = letter.toUpperCase() + number;
+					if (numCoor === 1 || numCoor <= 10) {
+						currentStrike = letter.toUpperCase() + numCoor;
 						return true;
 					} else {
 						console.log("Invalid location. Please try again.");
@@ -141,11 +133,9 @@ function game() {
 				checkCoor();
 			}
 			recordedStrike.push(currentStrike);
-			console.log(currentStrike);
-			console.log(recordedStrike);
+
 			if (ships.flat().includes(currentStrike)) {
 				hitPoint--;
-
 				console.log("Thats a hit!!");
 				checkCoor;
 			} else if (!ships.flat().includes(currentStrike)) {
@@ -153,13 +143,13 @@ function game() {
 				checkCoor;
 			}
 		}
-
 		goodStrike();
 		function checkSunkShips() {
 			if (hitPoint === 0) {
 				console.log("You have sunk all my ships!!!");
 				let playAgain = rls.keyInYN("Would you like to play again? ");
-				if (playAgain === true) {
+				if (playAgain) {
+					restart = false;
 					game();
 				} else {
 					console.log("Have a good day!!");
